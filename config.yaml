@@ -1,0 +1,25 @@
+port: 8901
+redisConfig:
+  address: 127.0.0.1:6379
+  password: "Abcdef@123456"
+dbConfig:
+  address: "root:Abcdef@123456@tcp(127.0.0.1:3306)/main_library?charset=utf8mb4&timeout=5s&readTimeout=6s&parseTime=true&loc=Asia%2fShanghai"
+  maxConn: 200
+  maxIdle: 100
+  minIdle: 50
+jwt:
+  buffer-time: 86400
+  expires-time: 604800
+  signing-key: 08d74b22-6b61-481f-96fe-05d677bf304a
+zap:
+  level: 'debug'
+  filename: './log/all.log'
+  maxSize: 200
+  maxAge: 7
+  maxBackups: 10
+  log-in-console: false
+logConfig:
+  filePath: "./test.log"
+  isStdout: true
+  logLevel: 5
+testPhonenumbers: "13279208934,17621756990,13299987666,13776584321,15879634586,13996542276,13918553295"
