@@ -14,8 +14,7 @@ const (
 	BindPhone  OpType = "bindPhone"
 )
 
-type LogService struct {
-}
+type LogService struct {}
 
 func (l *LogService) InsertLoginLog(usrId int, phone string, linfo interface{}) {
 	lgModel := &model.LogOperationInfosModel{}

@@ -8,6 +8,4 @@
 *.ntvs*
 *.njsproj
 *.sln
-
-testapi/
 test.log.*
