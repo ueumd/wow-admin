@@ -1,8 +1,8 @@
-# hello-admin
+# wow-admin
 
 # 启动
 ```
-cd hello-admin
+cd wow-admin
 go get github.com/pilu/fresh
 fresh
 ```
