@@ -1,6 +1,6 @@
 package model
 
-import "github.com/dgrijalva/jwt-go"
+import "github.com/golang-jwt/jwt/v4"
 
 type UserTokenClaim struct {
 	Token     string `json:"token"`
@@ -12,4 +12,3 @@ type UserTokenClaim struct {
 
 	jwt.StandardClaims
 }
-

@@ -10,7 +10,6 @@ import (
 )
 
 type ResponseUtil struct {
-	
 }
 
 func (res *ResponseUtil) ErrorLog(ctx *gin.Context, err error) {
@@ -20,15 +19,15 @@ func (res *ResponseUtil) ErrorLog(ctx *gin.Context, err error) {
 	errorStrings := err.Error()
 	strValues := strings.Split(errorStrings, "\n")
 	logEntry := logger.WithFiled("lrequest", ctx.Request.URL.Path)
-	for _,v := range strValues {
+	for _, v := range strValues {
 		logEntry.Errorln(strings.Replace(v, "\t", "", 1))
 	}
 }
 
 type CommResponse struct {
-	Code int `json:"code"`
-	Message string `json:"message"`
-	Data  interface{} `json:"data"`
+	Code    int         `json:"code"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 func (res *ResponseUtil) JsonResult(ctx *gin.Context, code int, message string, data interface{}) {
@@ -69,7 +68,7 @@ func (res *ResponseUtil) Json200OK(ctx *gin.Context, data interface{}) {
 
 	ctx.JSON(200, &CommResponse{
 		Code:    200,
-		Message: "操作成功",
+		Message: "success",
 		Data:    data,
 	})
 }
@@ -83,7 +82,7 @@ func (res *ResponseUtil) JsonErrorResult(ctx *gin.Context, err error) {
 			Message: serviceErr.ErrMessage(),
 			Data:    serviceErr.ErrData(),
 		})
-	}else {
+	} else {
 		ctx.JSON(200, &CommResponse{
 			Code:    500,
 			Message: "服务器内部错误",

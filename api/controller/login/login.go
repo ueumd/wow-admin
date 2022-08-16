@@ -11,18 +11,18 @@ import (
 )
 
 type LoginController struct {
-	loginService          service.LoginService
+	loginService service.LoginService
 	response.ResponseUtil
 }
 
-func init()  {
+func init() {
 	u := &LoginController{}
 	loginGroup := router.GetWebRouter().Group("v1/login")
 	loginGroup.POST("phoneLoginTest", u.PhoneLoginTest)
 	loginGroup.POST("phoneLogin", u.PhoneLogin)
 }
 
-func (c *LoginController) PhoneLoginTest(ctx *gin.Context)  {
+func (c *LoginController) PhoneLoginTest(ctx *gin.Context) {
 	username := ctx.PostForm("username")
 	password := ctx.PostForm("password")
 
@@ -55,6 +55,6 @@ func (u *LoginController) PhoneLogin(ctx *gin.Context) {
 	if err != nil {
 		u.JsonErrorResult(ctx, err)
 	} else {
-		u.JsonResult(ctx, 200, "登陆成功", token)
+		u.Json200OK(ctx, token)
 	}
 }

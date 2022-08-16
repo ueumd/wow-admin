@@ -1,9 +1,9 @@
-port: 8901
+port: 5173
 redisConfig:
   address: 127.0.0.1:6379
   password: "Abcdef@123456"
 dbConfig:
-  address: "root:Abcdef@123456@tcp(127.0.0.1:3306)/main_library?charset=utf8mb4&timeout=5s&readTimeout=6s&parseTime=true&loc=Asia%2fShanghai"
+  address: "root:Abcdef@123456@tcp(127.0.0.1:3306)/wow_admin?charset=utf8mb4&timeout=5s&readTimeout=6s&parseTime=true&loc=Asia%2fShanghai"
   maxConn: 200
   maxIdle: 100
   minIdle: 50
@@ -22,4 +22,4 @@ logConfig:
   filePath: "./test.log"
   isStdout: true
   logLevel: 5
-testPhonenumbers: "13279208934,17621756990,13299987666,13776584321,15879634586,13996542276,13918553295"
+testPhonenumbers: "13912345678"

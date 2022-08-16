@@ -33,13 +33,13 @@ func (p *Program) Init() error {
 	global.CONFIG = config.Get()
 
 	// logger
-	err = logger.Init(global.CONFIG .Log.FilePath, global.CONFIG.Log.IsStdOut, global.CONFIG.Log.LogLevel)
+	err = logger.Init(global.CONFIG.Log.FilePath, global.CONFIG.Log.IsStdOut, global.CONFIG.Log.LogLevel)
 	if err != nil {
 		return err
 	}
 
 	// API
-	address := fmt.Sprintf(":%d",global.CONFIG.Port)
+	address := fmt.Sprintf(":%d", global.CONFIG.Port)
 	api.Init(p.ctx, address, p.wait)
 
 	// service
@@ -67,7 +67,7 @@ func (p *Program) Stop() error {
 	return nil
 }
 
-func main()  {
+func main() {
 	program := &Program{}
 	if err := program.Init(); err != nil {
 		panic(err)
