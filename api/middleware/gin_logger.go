@@ -2,38 +2,26 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/ueumd/logger"
+	"go.uber.org/zap"
 	"time"
+	"wow-admin/utils"
 )
 
-// 路由日志中间件
-func RouterLogger() func(ctx *gin.Context) {
+// 日志中间件
+func RouterLogger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
-		path := c.Request.URL.Path
-		raw := c.Request.URL.RawQuery
-
 		c.Next()
-		end := time.Now()
-		latency := end.Sub(start)
-
-		clientIP := c.ClientIP()
-		method := c.Request.Method
-		statusCode := c.Writer.Status()
-		var statusColor, methodColor, resetColor string
-		comment := c.Errors.ByType(gin.ErrorTypePrivate).String()
-		if raw != "" {
-			path = path + "?" + raw
-		}
-
-		logger.InfoF("[GIN] %v |%s %3d %s| %13v | %15s |%s %-7s %s %s %s",
-			end.Format("2006/01/02 - 15:04:05"),
-			statusColor, statusCode, resetColor,
-			latency,
-			clientIP,
-			methodColor, method, resetColor,
-			path,
-			comment,
+		cost := time.Since(start)
+		utils.Logger.Info(c.Request.URL.Path,
+			zap.Int("status", c.Writer.Status()),
+			zap.String("method", c.Request.Method),
+			// zap.String("path", c.Request.URL.Path),
+			zap.String("query", c.Request.URL.RawQuery),
+			zap.String("ip", c.ClientIP()),
+			zap.String("user-agent", c.Request.UserAgent()),
+			zap.String("errors", c.Errors.ByType(gin.ErrorTypePrivate).String()),
+			zap.Duration("cost", cost),
 		)
 	}
 }

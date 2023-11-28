@@ -7,6 +7,6 @@ import (
 	"wow-admin/utils"
 )
 
-func Init(ctx context.Context, address string, wait *utils.WaitGroup) {
-	router.InitAndStartWebServer(address, ctx, true, wait)
+func Init(ctx context.Context, wait *utils.WaitGroup) {
+	router.InitAndStartWebServer(ctx, true, wait)
 }

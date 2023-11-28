@@ -2,15 +2,12 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/ueumd/logger"
 	"os"
 	"os/signal"
 	"syscall"
 	"wow-admin/api"
-	"wow-admin/config"
-	"wow-admin/core"
-	"wow-admin/global"
+	"wow-admin/dao"
 	"wow-admin/utils"
 )
 
@@ -20,40 +17,24 @@ type Program struct {
 	wait       *utils.WaitGroup
 }
 
-func (p *Program) Init() error {
+func (p *Program) Init() {
 	p.ctx, p.cancelFunc = context.WithCancel(context.Background())
 	p.wait = &utils.WaitGroup{}
 
-	var err error
+	utils.InitViper()
+	utils.InitLogger()
+	utils.InitRedis()
 
-	// config
-	if err = config.Init("config.yaml"); err != nil {
-		panic(err)
-	}
-	global.CONFIG = config.Get()
+	//if err := utils.InitSqlxDB(); err != nil {
+	//	fmt.Printf("init DB failed, err:%v\n", err)
+	//	return
+	//}
 
-	// logger
-	err = logger.Init(global.CONFIG .Log.FilePath, global.CONFIG.Log.IsStdOut, global.CONFIG.Log.LogLevel)
-	if err != nil {
-		return err
-	}
+	//fmt.Println("init DB succeeded")
 
-	// API
-	address := fmt.Sprintf(":%d",global.CONFIG.Port)
-	api.Init(p.ctx, address, p.wait)
+	dao.DB = utils.InitMyQLDB()
 
-	// service
-	err = core.InitService()
-	if err != nil {
-		return err
-	}
-
-	// DB
-	err = core.InitDB()
-	if err != nil {
-		return err
-	}
-	return nil
+	api.Init(p.ctx, p.wait)
 }
 
 func (p *Program) Start() error {
@@ -67,11 +48,9 @@ func (p *Program) Stop() error {
 	return nil
 }
 
-func main()  {
+func main() {
 	program := &Program{}
-	if err := program.Init(); err != nil {
-		panic(err)
-	}
+	program.Init()
 
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, syscall.SIGHUP, syscall.SIGTERM, syscall.SIGINT, syscall.SIGKILL)

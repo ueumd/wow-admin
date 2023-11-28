@@ -3,10 +3,12 @@ package router
 import (
 	"context"
 	"github.com/gin-gonic/gin"
-	"github.com/ueumd/logger"
+	"go.uber.org/zap"
 	"net/http"
 	"strings"
+	"time"
 	"wow-admin/api/middleware"
+	"wow-admin/config"
 	"wow-admin/global"
 	"wow-admin/utils"
 )
@@ -17,12 +19,10 @@ type DefaultHttpHandler struct {
 	fileServer http.Handler
 }
 
-
 func (h *DefaultHttpHandler) Init(router *gin.Engine, debug bool) {
 	h.router = router
 	h.isDebug = debug
 }
-
 
 func (h *DefaultHttpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if strings.HasPrefix(r.URL.Path, "/debug/pprof") && h.isDebug {
@@ -31,7 +31,6 @@ func (h *DefaultHttpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.router.ServeHTTP(w, r)
 	}
 }
-
 
 type WebServer interface {
 	Start()
@@ -42,7 +41,6 @@ type defaultServer struct {
 	httpServer *http.Server
 	ctx        context.Context
 }
-
 
 var _defaultWebServer WebServer
 var _defaultWebRouter = gin.New()
@@ -56,30 +54,35 @@ func init() {
 func (s *defaultServer) Start() {
 	go func() {
 		if err := s.httpServer.ListenAndServe(); err != nil {
-			logger.Fatalf(global.SERVER_NAME + " web server started fail:%v", err)
+			utils.Logger.Fatal(global.SERVER_NAME+" web server started fail:%v", zap.Error(err))
 		}
 	}()
 }
 
-
 func (s *defaultServer) Stop() {
 	s.httpServer.Close()
-	logger.Infoln(global.SERVER_NAME + " server stopped .....")
+	utils.Logger.Info(global.SERVER_NAME + " server stopped .....")
 }
 
-
-func InitAndStartWebServer(address string, ctx context.Context, debug bool, wait *utils.WaitGroup) {
+func InitAndStartWebServer(ctx context.Context, debug bool, wait *utils.WaitGroup) {
 	gin.SetMode(gin.ReleaseMode)
 	hHandler := &DefaultHttpHandler{}
 	hHandler.Init(_defaultWebRouter, debug)
-	server := &http.Server{Addr: address, Handler: hHandler}
+
+	backPort := config.Cfg.Server.BackPort
+	server := &http.Server{
+		Addr:         backPort,
+		Handler:      hHandler,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
 
 	_defaultWebServer = &defaultServer{
 		httpServer: server,
 		ctx:        ctx,
 	}
 	_defaultWebServer.Start()
-	logger.InfoF(global.SERVER_NAME + " server started at %s ...", address)
+	utils.Logger.Info(global.SERVER_NAME+" server started at %s ...", zap.String("backPort", backPort))
 	wait.Wrap(func() {
 		select {
 		case <-ctx.Done():
@@ -87,7 +90,6 @@ func InitAndStartWebServer(address string, ctx context.Context, debug bool, wait
 		}
 	})
 }
-
 
 func GetWebRouter() *gin.Engine {
 	return _defaultWebRouter

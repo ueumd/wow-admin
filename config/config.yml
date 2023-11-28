@@ -1,0 +1,37 @@
+# 本地运行的配置文件
+Server:
+  AppMode: debug # debug 开发环境, release 生产环境
+  BackPort: :3001 # 后台服务端口
+  FrontPort: 5173 # 前台服务端口
+
+JWT:
+  Secret: 1234567890!@#$%^&*()_+-=
+  Expire: 24 # 过期时间 (小时)
+  Issuer: wow-admin
+
+Mysql:
+  Host: 127.0.0.1
+  Port: "3306"
+  Config: "" # 其他配置, 例如时区
+  Dbname: wow_admin
+  Username: root
+  Password: "Abcdef@123456"
+  # 日志级别 silent, error, warn, info, 默认 info
+  LogMode: info # silent 相当于关闭日志
+
+Redis:
+  DB: 7
+  Addr: 127.0.0.1:6379
+  Password: ""
+Session:
+  Name: wowSession
+  Salt: salt
+  MaxAge: 600 # 秒
+
+Zap:
+  Level: info # 日志级别: debug, info, warn, error, dpanic, panic, fatal, 默认 info
+  Format: console # 输出格式: console, json
+  Prefix: "[WOW-ADMIN] " # 日志前缀
+  Directory: logs # 存放日志的文件夹
+  ShowLine: true # 是否显示哪行调用
+  LogInConsole: true # 是否输出到控制台

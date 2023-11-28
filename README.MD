@@ -1,8 +1,2 @@
-# hello-admin
-
-# 启动
-```
-cd hello-admin
-go get github.com/pilu/fresh
-fresh
-```
+# Simple Gin Serve
+> Developing a RESTful API with Go and Gin

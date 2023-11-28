@@ -3,8 +3,6 @@ package global
 import (
 	"github.com/go-redis/redis"
 	"github.com/jmoiron/sqlx"
-	"github.com/spf13/viper"
-	"wow-admin/config"
 )
 
 const (
@@ -12,8 +10,6 @@ const (
 )
 
 var (
-	CONFIG 			config.Config
-	DB 				*sqlx.DB
-	VIPER 			*viper.Viper
-	RedisClient 	*redis.Client
+	DB          *sqlx.DB
+	RedisClient *redis.Client
 )
