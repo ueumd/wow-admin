@@ -2,7 +2,6 @@ package dao
 
 import (
 	"errors"
-
 	"gorm.io/gorm"
 )
 

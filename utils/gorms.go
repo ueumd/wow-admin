@@ -29,6 +29,8 @@ func InitMyQLDB() *gorm.DB {
 
 	log.Println("MySQL 连接成功")
 
+	// _ = db.AutoMigrate(&model.UserAuth{})
+
 	sqlDB, _ := db.DB()
 
 	// 设置连接池中的最大闲置连接

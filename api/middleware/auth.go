@@ -10,6 +10,7 @@ import (
 
 func AuthLogin() gin.HandlerFunc {
 	return func(c *gin.Context) {
+
 		utils.Logger.Info(c.Request.URL.Path)
 		requestPath := c.Request.URL.Path
 		needLogin := ignoreRoute(requestPath)
@@ -63,13 +64,14 @@ func AuthLogin() gin.HandlerFunc {
 	}
 }
 
-/*
-*
-白名单路由
-*/
+// 白名单路由
 func ignoreRoute(requestPath string) bool {
-	if strings.HasPrefix(requestPath, "/v1/common") {
-		return true
+	// return true
+	whiteList := []string{"/api/common", "/api/login", "/api/register"}
+	for _, val := range whiteList {
+		if strings.HasPrefix(requestPath, val) {
+			return true
+		}
 	}
 	return false
 }

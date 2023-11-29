@@ -82,7 +82,7 @@ func InitAndStartWebServer(ctx context.Context, debug bool, wait *utils.WaitGrou
 		ctx:        ctx,
 	}
 	_defaultWebServer.Start()
-	utils.Logger.Info(global.SERVER_NAME+" server started at %s ...", zap.String("backPort", backPort))
+	utils.Logger.Info(global.SERVER_NAME + " server started at http://localhost" + backPort)
 	wait.Wrap(func() {
 		select {
 		case <-ctx.Done():
@@ -93,4 +93,8 @@ func InitAndStartWebServer(ctx context.Context, debug bool, wait *utils.WaitGrou
 
 func GetWebRouter() *gin.Engine {
 	return _defaultWebRouter
+}
+
+func GetWebRouterGroup() *gin.RouterGroup {
+	return _defaultWebRouter.Group("/api")
 }

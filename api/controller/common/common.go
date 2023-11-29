@@ -16,7 +16,8 @@ type CommonController struct {
 
 func init() {
 	c := &CommonController{}
-	commGroup := router.GetWebRouter().Group("/v1/common")
+	r := router.GetWebRouterGroup()
+	commGroup := r.Group("/common")
 	commGroup.GET("/getSystemDate", c.GetSystemDate)
 	commGroup.GET("/getDictionaryData", c.getDictionaryData)
 	commGroup.GET("/getAllSupportCityList", c.GetAllSupportCityList)
