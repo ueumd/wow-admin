@@ -46,7 +46,9 @@ var _defaultWebServer WebServer
 var _defaultWebRouter = gin.New()
 
 func init() {
-	_defaultWebRouter.Use(middleware.RouterLogger(), gin.Recovery())
+	// _defaultWebRouter.Use(middleware.RouterLogger(), gin.Recovery())
+	_defaultWebRouter.Use(middleware.RouterLogger())
+	_defaultWebRouter.Use(middleware.ErrorRecovery(false)) // 自定义错误处理中间件，不使用gin.Recovery()
 	_defaultWebRouter.Use(middleware.Cors())
 	_defaultWebRouter.Use(middleware.AuthLogin())
 }

@@ -3,7 +3,7 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 	"wow-admin/api/router"
-	"wow-admin/model/dto"
+	"wow-admin/model/req"
 	"wow-admin/service"
 	"wow-admin/utils"
 	"wow-admin/utils/result"
@@ -25,26 +25,26 @@ func init() {
 
 // 后台登录
 func (c *UserController) login(ctx *gin.Context) {
-	loginReq := utils.BindValidJson[dto.Login](ctx)
+	loginReq := utils.BindValidJson[req.Login](ctx)
 
 	loginVO, code := c.userService.Login(ctx, loginReq.Username, loginReq.Password)
 
 	result.SendData(ctx, code, loginVO)
 }
 
+// 注册
 func (c *UserController) register(ctx *gin.Context) {
-	registerReq := utils.BindValidJson[dto.Register](ctx)
-	code := c.userService.Register(registerReq)
-	result.SendCode(ctx, code)
+	// data := utils.BindValidJson[dto.Register](ctx)
+	// validMsg := utils.Validate(ctx, &data)
+	// if validMsg != "" {
+	//	result.ReturnJSON(ctx, http.StatusOK, result.ERROR_INVALID_PARAM, validMsg, nil)
+	//	return
+	// }
+	// result.SendCode(ctx, c.userService.Register(data))
+
+	result.SendCode(ctx, c.userService.Register(utils.BindValidJson[req.Register](ctx)))
 }
 
 func (c *UserController) getUserInfo(ctx *gin.Context) {
-	username := "Test"
-	password := "123"
-
-	user := make(map[string]string)
-	user["username"] = username
-	user["password"] = password
-
-	result.SendData(ctx, 0, user)
+	result.SuccessData(ctx, c.userService.GetUserInfo(utils.GetFromContext[int](ctx, "userId")))
 }

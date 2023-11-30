@@ -23,7 +23,6 @@ type Menu struct {
 // 用户账户信息
 type UserAuth struct {
 	Universal
-	UserInfoId    int       `gorm:"" json:"userInfoId"`
 	Username      string    `gorm:"type:varchar(50);comment:用户名" json:"username"`
 	Password      string    `gorm:"type:varchar(100)" json:"password"`
 	LoginType     int       `gorm:"type:tinyint(1);comment:登录类型" json:"loginType"`

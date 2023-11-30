@@ -20,7 +20,7 @@ Mysql:
   LogMode: info # silent 相当于关闭日志
 
 Redis:
-  DB: 7
+  DB: 11
   Addr: 127.0.0.1:6379
   Password: ""
 Session:

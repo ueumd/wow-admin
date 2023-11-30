@@ -16,7 +16,7 @@ func RouterLogger() gin.HandlerFunc {
 		utils.Logger.Info(c.Request.URL.Path,
 			zap.Int("status", c.Writer.Status()),
 			zap.String("method", c.Request.Method),
-			// zap.String("path", c.Request.URL.Path),
+			zap.String("path", c.Request.URL.Path),
 			zap.String("query", c.Request.URL.RawQuery),
 			zap.String("ip", c.ClientIP()),
 			zap.String("user-agent", c.Request.UserAgent()),
