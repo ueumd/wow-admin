@@ -3,6 +3,7 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	"strings"
+	"time"
 	"wow-admin/utils"
 	"wow-admin/utils/result"
 )
@@ -47,11 +48,11 @@ func AuthLogin() gin.HandlerFunc {
 		}
 
 		// 判断 token 已过期
-		//if time.Now().Unix() > claims.ExpiresAt.Unix() {
-		//	result.SendCode(c, result.ERROR_TOKEN_RUNTIME)
-		//	c.Abort()
-		//	return
-		//}
+		if time.Now().Unix() > claims.ExpiresAt.Unix() {
+			result.SendCode(c, result.ERROR_TOKEN_RUNTIME)
+			c.Abort()
+			return
+		}
 
 		// 将当前请求的相关信息保存到请求的上下文 c 上
 		// 后续的处理函数可以用过 c.Get("xxx") 来获取当前请求的用户信息
