@@ -21,6 +21,7 @@ func init() {
 
 	userRouter := base.Group("/user")
 	userRouter.GET("getUserInfo", u.getUserInfo)
+	userRouter.GET("logout", u.logout)
 }
 
 // 后台登录
@@ -30,6 +31,11 @@ func (c *UserController) login(ctx *gin.Context) {
 	loginVO, code := c.userService.Login(ctx, loginReq.Username, loginReq.Password)
 
 	result.SendData(ctx, code, loginVO)
+}
+
+func (c *UserController) logout(ctx *gin.Context) {
+	c.userService.Logout(ctx)
+	result.Success(ctx)
 }
 
 // 注册

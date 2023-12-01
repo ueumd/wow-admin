@@ -42,6 +42,7 @@ func (s *UserService) Login(c *gin.Context, username string, password string) (l
 	}
 
 	uuid := utils.Encryptor.MD5(ipAddress + browser + os)
+
 	token, err := utils.GetJWT().GenToken(userAuth.ID, "1", uuid)
 
 	if err != nil {
@@ -88,6 +89,11 @@ func (s *UserService) GetUserInfo(id int) vo.UserInfoVO {
 	dao.GetOne(&userInfo, "id", id)
 	data := utils.CopyProperties[vo.UserInfoVO](userInfo)
 	return data
+}
+
+func (s *UserService) Logout(c *gin.Context) {
+	uuid := utils.GetFromContext[string](c, "uuid")
+	utils.Redis.Del(KEY_USER + uuid)
 }
 
 // 检查用户名是否已存在
