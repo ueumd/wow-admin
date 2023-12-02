@@ -1,4 +1,5 @@
 package main
+
 import (
 	"context"
 	"log"
@@ -8,12 +9,21 @@ import (
 	"syscall"
 	"time"
 )
+
+func home(w http.ResponseWriter, r *http.Request) {
+	time.Sleep(3 * time.Second)
+	log.Println(w, "Hello world!")
+}
+func get(w http.ResponseWriter, r *http.Request) {
+	time.Sleep(3 * time.Second)
+	log.Println(w, "Hello world!")
+}
+
 func main() {
 	s := http.NewServeMux()
-	s.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		time.Sleep(3 * time.Second)
-		log.Println(w, "Hello world!")
-	})
+	s.HandleFunc("/", home)
+	s.HandleFunc("/get", home)
+
 	server := &http.Server{
 		Addr:    ":8090",
 		Handler: s,

@@ -55,15 +55,21 @@ func init() {
 
 func (s *defaultServer) Start() {
 	go func() {
-		if err := s.httpServer.ListenAndServe(); err != nil {
-			utils.Logger.Fatal(global.SERVER_NAME+" web server started fail:%v", zap.Error(err))
+		if err := s.httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			utils.Logger.Error(global.SERVER_NAME+" web server started fail", zap.Error(err))
 		}
 	}()
 }
 
 func (s *defaultServer) Stop() {
-	s.httpServer.Close()
-	utils.Logger.Info(global.SERVER_NAME + " server stopped .....")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	err := s.httpServer.Shutdown(ctx)
+	if err != nil {
+		utils.Logger.Info(global.SERVER_NAME + " server Shutdown .....")
+	}
+
+	utils.Logger.Info(global.SERVER_NAME + " server exiting .....")
 }
 
 func InitAndStartWebServer(ctx context.Context, debug bool, wait *utils.WaitGroup) {
@@ -85,6 +91,7 @@ func InitAndStartWebServer(ctx context.Context, debug bool, wait *utils.WaitGrou
 	}
 	_defaultWebServer.Start()
 	utils.Logger.Info(global.SERVER_NAME + " server started at http://localhost" + backPort)
+
 	wait.Wrap(func() {
 		select {
 		case <-ctx.Done():
