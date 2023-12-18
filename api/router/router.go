@@ -64,9 +64,10 @@ func (s *defaultServer) Start() {
 func (s *defaultServer) Stop() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	err := s.httpServer.Shutdown(ctx)
-	if err != nil {
-		utils.Logger.Info(global.SERVER_NAME + " server Shutdown .....")
+
+	// 5秒内优雅关闭服务（将未处理完的请求处理完再关闭服务），超过5秒就超时退出
+	if err := s.httpServer.Shutdown(ctx); err != nil {
+		utils.Logger.Error(global.SERVER_NAME+"server Shutdown ", zap.Error(err))
 	}
 
 	utils.Logger.Info(global.SERVER_NAME + " server exiting .....")

@@ -67,7 +67,7 @@ func AuthLogin() gin.HandlerFunc {
 // 白名单路由
 func ignoreRoute(requestPath string) bool {
 	// return true
-	whiteList := []string{"/api/common", "/api/login", "/api/register"}
+	whiteList := []string{"/api/common", "/api/login", "/api/register", "/api/typicode"}
 	for _, val := range whiteList {
 		if strings.HasPrefix(requestPath, val) {
 			return true

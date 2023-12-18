@@ -1,0 +1,4 @@
+p, demo , /user, write #demo用户对/user有write权限
+p, demo , /order, read #demo用户对/order有read权限
+p, demo1 , /user/userList,read #demo1用户对/user/userList有read权限
+p, demo2 , /order/orderList,read #demo2用户对/order/orderList有read权限

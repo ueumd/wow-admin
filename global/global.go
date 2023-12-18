@@ -1,7 +1,6 @@
 package global
 
 import (
-	"github.com/go-redis/redis"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -10,6 +9,5 @@ const (
 )
 
 var (
-	DB          *sqlx.DB
-	RedisClient *redis.Client
+	DB *sqlx.DB
 )
