@@ -6,6 +6,23 @@ import "time"
 Role-Based Access Control
 */
 
+// 角色
+type Role struct {
+	Universal
+	Name      string `gorm:"type:varchar(20);comment:角色名" json:"name"`
+	Label     string `gorm:"type:varchar(50);comment:角色描述" json:"label"`
+	IsDisable string `gorm:"type:tinyint(1);comment:是否禁用（0-否 1-是）" json:"is_disable"`
+}
+
+// 资源接口 Resource == casbin_rule
+type Resource struct {
+	Universal     `mapstructure:",squash"`
+	Url           string `gorm:"type:varchar(255);comment:资源路径接口URL" json:"url" mapstructure:"url"`
+	RequestMethod string `gorm:"type:varchar(10)" json:"request_method" mapstructure:"request_method"`
+	ParentId      int    `gorm:"comment:父权限id" json:"parent_id" mapstructure:"parent_id,omitempty"`
+	IsAnonymous   int    `gorm:"type:tinyint(1);comment:是否匿名访问(0-否 1-是)" json:"is_anonymous" mapstructure:"is_anonymous"`
+}
+
 // 菜单
 type Menu struct {
 	Universal `mapstructure:",squash"`
@@ -23,10 +40,29 @@ type Menu struct {
 // 用户账户信息
 type UserAuth struct {
 	Universal
+	UserInfoId    int       `gorm:"comment:用户信息ID" json:"user_info_id"`
 	Username      string    `gorm:"type:varchar(50);comment:用户名" json:"username"`
-	Password      string    `gorm:"type:varchar(100)" json:"password"`
-	LoginType     int       `gorm:"type:tinyint(1);comment:登录类型" json:"loginType"`
-	IpAddress     string    `gorm:"type:varchar(20);comment:登录IP地址" json:"ipAddress"`
+	Password      string    `gorm:"type:varchar(100);comment:密码" json:"password"`
+	LoginType     int       `gorm:"type:tinyint(1);comment:登录类型" json:"login_type"`
+	IpAddress     string    `gorm:"type:varchar(20);comment:登录IP地址" json:"ip_address"`
 	IpSource      string    `gorm:"type:varchar(50);comment:IP来源" json:"ip_source"`
-	LastLoginTime time.Time `gorm:"comment:上次登录时间" json:"LastLoginTime"`
+	LastLoginTime time.Time `gorm:"comment:上次登录时间" json:"last_login_time"`
+}
+
+// 角色-资源 关联
+type RoleResource struct {
+	RoleId     int `json:"role_id"`
+	ResourceId int `json:"resource_id"`
+}
+
+// 角色-菜单 关联
+type RoleMenu struct {
+	RoleId int `json:"role_id"`
+	MenuId int `json:"menu_id"`
+}
+
+// 用户-角色 关联
+type UserRole struct {
+	UserId int `json:"user_id"`
+	RoleId int `json:"role_id"`
 }

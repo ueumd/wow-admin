@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-resty/resty/v2"
 	"go.uber.org/zap"
+	"strconv"
 	"wow-admin/api/router"
 	"wow-admin/utils"
 	"wow-admin/utils/result"
@@ -68,14 +69,11 @@ func (c *TypicodeController) put(ctx *gin.Context) {
 	var article articleInfo
 	articleReq := utils.BindValidJson[articleInfo](ctx)
 
-	url := fmt.Sprintf("http://jsonplaceholder.typicode.com/posts/%d", articleReq.Id)
-	fmt.Println("url: ", url)
-
 	response, err := resty.New().R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(&articleReq).
 		SetResult(&article).
-		Post(url)
+		Post("http://jsonplaceholder.typicode.com/posts/" + strconv.Itoa(articleReq.Id))
 
 	if err != nil {
 		result.Send500Error(ctx, "服务异常")

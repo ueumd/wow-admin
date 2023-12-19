@@ -2,13 +2,16 @@ package utils
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"log"
+	"os"
 	"time"
 	"wow-admin/config"
+	"wow-admin/model"
 )
 
 func InitMyQLDB() *gorm.DB {
@@ -29,7 +32,23 @@ func InitMyQLDB() *gorm.DB {
 
 	log.Println("MySQL 连接成功")
 
-	// _ = db.AutoMigrate(&model.UserAuth{})
+	// 注册数据库表专用
+	err = db.AutoMigrate(
+		&model.City{},
+
+		//RBAC
+		&model.Role{},
+		&model.Resource{},
+		&model.Menu{},
+		&model.UserAuth{},
+		&model.RoleResource{},
+		&model.RoleMenu{},
+		&model.UserRole{},
+	)
+	if err != nil {
+		Logger.Error("register table failed", zap.Error(err))
+		os.Exit(0)
+	}
 
 	sqlDB, _ := db.DB()
 
